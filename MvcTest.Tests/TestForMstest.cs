@@ -4,19 +4,19 @@ using MvcTest.Controllers;
 namespace MvcTest.Tests
 {
     [TestClass]
-    public class HomeTests
+    public class TestForMsTest
     {
         [TestMethod]
-        public void TestHome()
+        public void TestMsTestHome()
         {
             var h = new HomeController();
             h.ToString();
         }
 
         [TestMethod]
-        public void TestHomeFail()
+        public void TestMsTestHome2()
         {
-            Assert.Fail("This fails");
+            Assert.IsTrue(true);
         }
     }
 }
