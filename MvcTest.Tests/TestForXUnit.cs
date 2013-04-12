@@ -13,7 +13,7 @@ namespace MvcTest.Tests
         [Fact]
         public void MyXunitTest2()
         {
-            Assert.True(true);
+            Assert.True(false);
         }
     }
 }

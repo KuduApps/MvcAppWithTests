@@ -16,7 +16,7 @@ namespace MvcTest.Tests
         [TestMethod]
         public void TestMsTestHome2()
         {
-            Assert.IsTrue(true);
+            Assert.IsTrue(false);
         }
     }
 }
