@@ -21,6 +21,10 @@ setlocal enabledelayedexpansion
 
 SET ARTIFACTS=%~dp0%artifacts
 
+IF NOT DEFINED TEST_COMMAND (
+  SET TEST_COMMAND="D:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+)
+
 IF NOT DEFINED DEPLOYMENT_SOURCE (
   SET DEPLOYMENT_SOURCE=%~dp0%.
 )
@@ -70,7 +74,17 @@ echo Handling .NET Web Application deployment.
 %MSBUILD_PATH% "%DEPLOYMENT_SOURCE%\MvcTest\MvcTest.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 2. KuduSync
+:: 2. Building test project
+echo Building test project
+"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\MvcTest.Tests\MvcTest.Tests.csproj"
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:: 3. Running tests
+echo Running tests
+%TEST_COMMAND% "%DEPLOYMENT_SOURCE%\MvcTest.Tests\bin\Debug\MvcTest.Tests.dll"
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:: 4. KuduSync
 call %KUDU_SYNC_CMD% -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 IF !ERRORLEVEL! NEQ 0 goto error
 
