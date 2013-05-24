@@ -22,7 +22,7 @@ setlocal enabledelayedexpansion
 SET ARTIFACTS=%~dp0%artifacts
 
 IF NOT DEFINED TEST_COMMAND (
-  SET TEST_COMMAND="D:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+  SET TEST_COMMAND="vstest.console.exe"
 )
 
 IF NOT DEFINED DEPLOYMENT_SOURCE (
