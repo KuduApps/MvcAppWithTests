@@ -71,12 +71,12 @@ IF NOT DEFINED MSBUILD_PATH (
 echo Handling .NET Web Application deployment.
 
 :: 1. Build to the temporary path
-"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\MvcTest\MvcTest.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\MvcTest\MvcTest.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Building test project
 echo Building test project
-"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\MvcTest.Tests\MvcTest.Tests.csproj"
+"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\MvcTest.Tests\MvcTest.Tests.csproj" /p:SolutionDir="%DEPLOYMENT_SOURCE%"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. Running tests
@@ -91,7 +91,7 @@ IF !ERRORLEVEL! NEQ 0 goto error
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 goto end
-
+  
 :error
 echo An error has occurred during web site deployment.
 call :exitSetErrorLevel
